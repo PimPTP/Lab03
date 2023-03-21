@@ -101,7 +101,7 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_BASE_Start(&htim2);
+  HAL_TIM_Base_Start(&htim2);
   HAL_TIM_IC_Start_DMA(&htim2, TIM_CHANNEL_1, InputCaptureBuffer, IC_BUFFER_SIZE);
 
   HAL_TIM_Base_Start(&htim1);
@@ -394,7 +394,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-float IC_Calc_Perioc()
+float IC_Calc_Period()
 {
 	uint32_t currentDMAPointer = IC_BUFFER_SIZE -__HAL_DMA_GET_COUNTER((htim2.hdma[1]));
 
