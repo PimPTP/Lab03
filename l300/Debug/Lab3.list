@@ -1069,6 +1069,7 @@ int main(void)
   MX_TIM5_Init();
  8000d3c:	f000 fa08 	bl	8001150 <MX_TIM5_Init>
   /* USER CODE BEGIN 2 */
+
   HAL_TIM_Base_Start(&htim2);
  8000d40:	4815      	ldr	r0, [pc, #84]	; (8000d98 <main+0x80>)
  8000d42:	f002 f915 	bl	8002f70 <HAL_TIM_Base_Start>
@@ -1091,27 +1092,27 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  static uint32_t timestamp = 0;
-	  	  if (HAL_GetTick() >= timestamp)
+	  if (HAL_GetTick() >= timestamp)
  8000d60:	f000 fdf2 	bl	8001948 <HAL_GetTick>
  8000d64:	4602      	mov	r2, r0
  8000d66:	4b0f      	ldr	r3, [pc, #60]	; (8000da4 <main+0x8c>)
  8000d68:	681b      	ldr	r3, [r3, #0]
  8000d6a:	429a      	cmp	r2, r3
  8000d6c:	d3f8      	bcc.n	8000d60 <main+0x48>
-	  	  {
-	  		  timestamp = HAL_GetTick()+500;
+	  {
+		  timestamp = HAL_GetTick() + 500;
  8000d6e:	f000 fdeb 	bl	8001948 <HAL_GetTick>
  8000d72:	4603      	mov	r3, r0
  8000d74:	f503 73fa 	add.w	r3, r3, #500	; 0x1f4
  8000d78:	4a0a      	ldr	r2, [pc, #40]	; (8000da4 <main+0x8c>)
  8000d7a:	6013      	str	r3, [r2, #0]
-	  		  averageRisingedgePeriod = IC_Calc_Period();
+		  averageRisingedgePeriod = IC_Calc_Period();
  8000d7c:	f000 faee 	bl	800135c <IC_Calc_Period>
  8000d80:	eef0 7a40 	vmov.f32	s15, s0
  8000d84:	4b08      	ldr	r3, [pc, #32]	; (8000da8 <main+0x90>)
  8000d86:	edc3 7a00 	vstr	s15, [r3]
 
-	  		  __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,MotorSetDuty);
+		  __HAL_TIM_SET_COMPARE(&htim1,TIM_CHANNEL_1,MotorSetDuty);
  8000d8a:	4b05      	ldr	r3, [pc, #20]	; (8000da0 <main+0x88>)
  8000d8c:	681b      	ldr	r3, [r3, #0]
  8000d8e:	4a07      	ldr	r2, [pc, #28]	; (8000dac <main+0x94>)
