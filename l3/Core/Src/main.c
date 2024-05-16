@@ -45,7 +45,12 @@ DMA_HandleTypeDef hdma_lpuart1_tx;
 DMA_HandleTypeDef hdma_lpuart1_rx;
 
 /* USER CODE BEGIN PV */
-
+uint8_t RxBuffer[20];
+uint8_t TxBuffer[20];
+uint8_t currentNum;
+uint8_t newNum;
+uint8_t guess;
+uint8_t result[];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -93,6 +98,8 @@ int main(void)
   MX_DMA_Init();
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  uint8_t text[] = "HIGH-LOW Game (1-20)\r\n'H' for HIGH or 'l' for LOW";
+  HAL_UART_Transmit(&hlpuart1, text, 50, 10);
 
   /* USER CODE END 2 */
 
