@@ -49,8 +49,7 @@ uint8_t RxBuffer[20];
 uint8_t TxBuffer[20];
 uint8_t currentNum;
 uint8_t newNum;
-uint8_t guess;
-uint8_t result[];
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -59,6 +58,7 @@ static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_LPUART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
+void UARTReceive();
 
 /* USER CODE END PFP */
 
@@ -98,8 +98,11 @@ int main(void)
   MX_DMA_Init();
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  uint8_t text[] = "HIGH-LOW Game (1-20)\r\n'H' for HIGH or 'l' for LOW";
+  uint8_t text[] = "HIGH-LOW Game (1-20)\r\n'H' for HIGH or 'L' for LOW\r\n";
   HAL_UART_Transmit(&hlpuart1, text, 50, 10);
+
+  currentNum = (rand()%20)+1;
+  newNum = 0;
 
   /* USER CODE END 2 */
 
@@ -110,6 +113,32 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  //currentNum
+//	  sprintf((char*)TxBuffer, "%s\r\n", currentNum);
+//	  HAL_UART_Transmit(&hlpuart1, TxBuffer, strlen((char*)TxBuffer), 10);
+
+	  //guess
+	  UARTReceive();
+
+	  //newNum
+//	  newNum = (rand()%20)+1;
+//	  sprintf((char*)TxBuffer, "%s\r\n", newNum);
+//	  HAL_UART_Transmit(&hlpuart1, TxBuffer, strlen((char*)TxBuffer), 10);
+//
+//	  //result
+//	  if((RxBuffer[0] == 72 && newNum > currentNum) || (RxBuffer[0] == 72 && newNum < currentNum))
+//	  {
+//		  sprintf((char*)TxBuffer, "Correct\r\n");
+//		  HAL_UART_Transmit(&hlpuart1, TxBuffer, strlen((char*)TxBuffer), 10);
+//	  }else{
+//		  sprintf((char*)TxBuffer, "Incorrect\r\n");
+//		  HAL_UART_Transmit(&hlpuart1, TxBuffer, strlen((char*)TxBuffer), 10);
+//	  }
+//
+//	  //next
+//	  currentNum = newNum;
+//	  newNum = 0;
+
   }
   /* USER CODE END 3 */
 }
@@ -269,7 +298,33 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void UARTReceive()
+{
+	//read UART char with in 10s
+	HAL_StatusTypeDef HAL_status = HAL_UART_Receive(&hlpuart1, RxBuffer, 1, 10000);
 
+	//if complete
+	if(HAL_status == HAL_OK)
+	{
+		//(for string only) Add string stop symbol \0 to end string
+		RxBuffer[1] = '\0';
+
+		//return received char
+		sprintf((char*)TxBuffer,"Received : %s\r\n",RxBuffer);
+		HAL_UART_Transmit(&hlpuart1, TxBuffer, strlen((char*)TxBuffer), 10);
+	}
+	//Timeout : print only received char
+	else if(HAL_status == HAL_TIMEOUT)
+	{
+		//(for string only) Add string stop symbol \0 to end string
+		uint32_t lastCharPos = hlpuart1.RxXferSize - hlpuart1.RxXferCount;
+		RxBuffer[lastCharPos] = '\0';
+
+		//return received char
+		sprintf((char*)TxBuffer,"Received Timeout : %s\r\n",RxBuffer);
+		HAL_UART_Transmit(&hlpuart1, TxBuffer, strlen((char*)TxBuffer), 10);
+	}
+}
 /* USER CODE END 4 */
 
 /**
