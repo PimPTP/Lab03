@@ -47,8 +47,8 @@ DMA_HandleTypeDef hdma_lpuart1_rx;
 /* USER CODE BEGIN PV */
 uint8_t RxBuffer[20];
 uint8_t TxBuffer[20];
-uint8_t currentNum;
-uint8_t newNum;
+uint8_t CurrentNum;
+uint8_t NewNum;
 
 /* USER CODE END PV */
 
@@ -99,10 +99,10 @@ int main(void)
   MX_LPUART1_UART_Init();
   /* USER CODE BEGIN 2 */
   uint8_t text[] = "HIGH-LOW Game (1-20)\r\nGuess 'H' for HIGH or 'L' for LOW\r\n";
-  HAL_UART_Transmit(&hlpuart1, text, 50, 10);
+  HAL_UART_Transmit(&hlpuart1, text, 100, 10);
 
-  currentNum = (rand()%20)+1;
-  newNum = 0;
+  CurrentNum = (rand()%20)+1;
+  NewNum = 0;
 
   /* USER CODE END 2 */
 
@@ -114,19 +114,19 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  //currentNum
-	  sprintf((char*)TxBuffer, "%d\r\n", currentNum);
+	  sprintf((char*)TxBuffer, "CurrentNum : %d\r\n", CurrentNum);
 	  HAL_UART_Transmit(&hlpuart1, TxBuffer, strlen((char*)TxBuffer), 10);
 
 	  //guess
 	  UARTReceive();
 
 	  //newNum
-	  newNum = (rand()%20)+1;
-	  sprintf((char*)TxBuffer, "%d\r\n", newNum);
+	  NewNum = (rand()%20)+1;
+	  sprintf((char*)TxBuffer, "NewNum : %d\r\n", NewNum);
 	  HAL_UART_Transmit(&hlpuart1, TxBuffer, strlen((char*)TxBuffer), 10);
 
 	  //result
-	  if((RxBuffer[0] == 72 && newNum > currentNum) || (RxBuffer[0] == 72 && newNum < currentNum))
+	  if((RxBuffer[0] == 72 && NewNum > CurrentNum) || (RxBuffer[0] == 76 && NewNum < CurrentNum))
 	  {
 		  sprintf((char*)TxBuffer, "Correct\r\n");
 		  HAL_UART_Transmit(&hlpuart1, TxBuffer, strlen((char*)TxBuffer), 10);
@@ -136,8 +136,8 @@ int main(void)
 	  }
 
 	  //next
-	  currentNum = newNum;
-	  newNum = 0;
+	  CurrentNum = NewNum;
+	  NewNum = 0;
 
   }
   /* USER CODE END 3 */
